@@ -7,19 +7,21 @@ import { ANCHOR_REGEXP } from '../constants';
 function HyperlinkParser(props) {
   const { url } = props;
   const getPage = useCallback(() => loadPage(url), [url]);
-
-  const { isFetching, data: htmlText, error } = useData(getPage);
-  const [results, setResults] = useState([]);
+  const [{ isFetching, results, error }, setState] = useState({
+    isFetching: false,
+    results: [],
+    error: null,
+  });
   const handleParseBtnClick = useCallback(() => {
-    if (htmlText) {
-      const worker = new Worker('/parser.worker.js');
-      worker.onmessage = ({ data: resultFromWorker }) => {
-        setResults(resultFromWorker);
+    if (url) {
+      const worker = new Worker('/parser2.worker.js');
+      worker.onmessage = ({ data }) => {
+        setState(data);
       };
 
-      worker.postMessage([htmlText, new RegExp(ANCHOR_REGEXP, 'g')]);
+      worker.postMessage([url, new RegExp(ANCHOR_REGEXP, 'g')]);
     }
-  }, [htmlText]);
+  }, [url]);
 
   return (
     <article>

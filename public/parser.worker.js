@@ -1,18 +1,11 @@
-self.onmessage = event => {
-  const {
-    data: [text, regexp],
-    data,
-  } = event;
+self.addEventListener('custom', () => {});
+self.addEventListener('custom2', () => {});
+self.addEventListener('custom3', () => {});
+self.addEventListener('custom4', () => {});
+self.addEventListener('custom5', () => {});
+self.addEventListener('custom6', () => {});
+self.addEventListener('custom7', () => {});
 
-  const results = text.matchAll(regexp);
-  const answer = [];
-  for (const match of results) {
-    const result = {
-      ...match.groups,
-    };
-    delete result.quote;
-    answer.push(result);
-  }
-
-  self.postMessage(answer);
+self.onmessage = ({ data: { eventType } }) => {
+  self.dispatchEvent(new Event());
 };
